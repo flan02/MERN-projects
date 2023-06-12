@@ -1,7 +1,7 @@
 //Estructura fija para los datos en mongodb
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
         username: {
             type: String,
             required: true,
@@ -19,8 +19,11 @@ const userSchema = mongoose.Schema({
             trim: true,
             max: 20
         }
+    }, 
+    {
+        timestamps: true
     })
 
 // crea una coleccion User y almacena datos que sigan el esquema del 2do param
-const User = mongoose.model('User', userSchema)
-export default User  // User.find(); User.remove(), etc
+const Users = mongoose.model('Users', userSchema)
+export default Users  // User.find(); User.remove(), etc

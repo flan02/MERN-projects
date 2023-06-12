@@ -4,4 +4,5 @@ import { connectDB } from "./db.js";
 
 connectDB()
 app.listen(3000)
-console.log('Server on PORT at http://localhost:3000', 3000);
+const PORT = process.env.PORT || 3000
+console.log(`Server on running at http://localhost:${PORT}`);
