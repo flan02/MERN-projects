@@ -1,0 +1,35 @@
+{
+  "name": "crud-auth-app",
+  "version": "1.0.0",
+  "description": "App en el stack MERN con crud y auth",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/flan02/MERN-projects.git"
+  },
+  "keywords": [
+    "mern",
+    "crud",
+    "auth",
+    "express",
+    "react"
+  ],
+  "author": "@flan02",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flan02/MERN-projects/issues"
+  },
+  "homepage": "https://github.com/flan02/MERN-projects#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
