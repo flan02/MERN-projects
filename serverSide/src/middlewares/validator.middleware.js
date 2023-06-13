@@ -7,6 +7,6 @@ export const validateSchema = (schema) => (req, res, next) => {
     //return res.status(400).json({ error }) devuelve rta larga
     return res
       .status(400)
-      .json({ error: error.errors.map((error) => error.message) });
+      .json(error.errors.map((error) => error.message)); //esto nos devuelve el error legible p/ los usuarios
   }
 };

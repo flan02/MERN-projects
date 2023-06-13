@@ -61,6 +61,7 @@ button[type="submit"] {
   background-color: rgb(77, 77, 204);
   color: white;
   letter-spacing: 3px;
+  border-radius: 3rem;
 }
 
 button[type="submit"]:hover {
@@ -68,4 +69,27 @@ button[type="submit"]:hover {
   color: rgb(77, 77, 204);
   background-color: white;
   letter-spacing: 3px;
+  border-radius: 3rem;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+.box-error {
+  padding: .7rem 1rem;
+  background-color: red;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 200;
+  letter-spacing: 2px;
+}
+
+span {
+  margin: 0;
+  padding: 0;
+
 }

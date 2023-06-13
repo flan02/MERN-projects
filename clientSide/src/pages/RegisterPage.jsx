@@ -1,16 +1,27 @@
+/* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
-import { registerRequest } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 //! Para autenticarnos de verdad tenemos qe hacer una peticion al backend con axios, fetch, ajax.
 //TODO La mayoria de apps modernas estan usando Axios.
 // Axios utiliza fetch por debajo.
 
 const RegisterPage = () => {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = handleSubmit(async (values) => {
-    //console.log(values);
-    const res = await registerRequest(values);
-    console.log(res);
+    const { register, handleSubmit, formState: {
+      errors
+    } } = useForm();
+    const { signup, user, isAuthenticated, error } = useAuth();
+    const navigate = useNavigate()
+    //console.log(user) // Vemos si el contexto global recibio el usuario que se registro
+    useEffect(() => {
+      if(isAuthenticated) navigate("/tasks");
+    }, [isAuthenticated])
+    
+    
+    const onSubmit = handleSubmit(async (values) => {
+    signup(values)
   });
   return (
     <>
@@ -26,6 +37,9 @@ const RegisterPage = () => {
               placeholder="username"
               autoComplete="on"
             />
+            {
+              errors.username && <p className="error">Username is required.</p>
+            }
           </div>
           <div>
             <label htmlFor="em"></label>
@@ -36,6 +50,9 @@ const RegisterPage = () => {
               placeholder="email"
               autoComplete="on"
             />
+            {
+              errors.email  && <p className="error">Email is required.</p>
+            }
           </div>
           <div>
             <label htmlFor="pass"></label>
@@ -45,10 +62,16 @@ const RegisterPage = () => {
               {...register("password", { required: true, minLength: 6 })}
               placeholder="password"
             />
+            {
+              errors.password && <p className="error">password is required.</p>
+            }
           </div>
           <div>
             <button type="submit"> Register </button>
           </div>
+            {
+              error.map((err, i) => (<span className="box-error" key={i} >{err}</span>))
+            }
         </form>
       </div>
     </>

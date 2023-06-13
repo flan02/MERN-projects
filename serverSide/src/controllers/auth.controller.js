@@ -7,6 +7,8 @@ import { createAccessToken } from '../helpers/jwt.js'
 export const register = async (req, res) => {
     const { username, email, password } = req.body
     try {
+        const userFound = await Users.findOne({ email })
+        if(userFound) return res.status(400).json([`the email ${email} is already in use.`])
         const passwordHash = await bcrypt.hash(password, 10)
         const User = new Users({
             username,
