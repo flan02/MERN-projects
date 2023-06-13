@@ -29,10 +29,38 @@ export const register = async (req, res) => {
     }catch(error){
         //console.log(error)
         res.status(500).json({ message: error.message })
-}
-    
-}   
-export const login = (req, res) => {
-    //res.send('login')
+    } 
 }
 
+export const login = async (req, res) => {
+    const { email, password } = req.body
+    try {
+        const userFound = await Users.findOne({email})
+        if(!userFound) return res.status(400).json({ message: "User not found" })
+        const isMatch = await bcrypt.compare(password, userFound.password)
+        if(!isMatch) return res.status(400).json({message: "Incorrect credentials."})
+    //? Token p/ validar la sesion
+        const token = await createAccessToken({ id: userFound._id })
+
+    res.cookie("token", token)
+    //? datos para el frontend
+    res.json({
+        id: userFound._id,
+        username: userFound.username,
+        email : userFound.email,
+        createAt: userFound.createdAt,
+        updateAt: userFound.updatedAt
+    })
+    }catch(error){
+        //console.log(error)
+        res.status(500).json({ message: error.message })
+    } 
+}
+
+
+export const logout = async (_req, res) => {
+    res.cookie("token", "", {
+        expires: new Date(0) // se elimina el token luego de iniciar sesion, podemos programarle una caducidad.
+    })
+    return res.sendStatus(200)
+}
