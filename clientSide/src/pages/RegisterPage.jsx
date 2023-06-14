@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 //! Para autenticarnos de verdad tenemos qe hacer una peticion al backend con axios, fetch, ajax.
 //TODO La mayoria de apps modernas estan usando Axios.
@@ -12,7 +12,7 @@ const RegisterPage = () => {
     const { register, handleSubmit, formState: {
       errors
     } } = useForm();
-    const { signup, user, isAuthenticated, error } = useAuth();
+    const { signup, user, isAuthenticated, error: signupErrors } = useAuth();
     const navigate = useNavigate()
     //console.log(user) // Vemos si el contexto global recibio el usuario que se registro
     useEffect(() => {
@@ -70,8 +70,13 @@ const RegisterPage = () => {
             <button type="submit"> Register </button>
           </div>
             {
-              error.map((err, i) => (<span className="box-error" key={i} >{err}</span>))
+              signupErrors.map((err, i) => (<span className="box-error" key={i} >{err}</span>))
             }
+            <div>
+            <p className="link-text">
+            Already have an account ? <Link className="link__link" to="/login">Login</Link>
+            </p>
+          </div>
         </form>
       </div>
     </>

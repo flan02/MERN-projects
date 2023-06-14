@@ -48,7 +48,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 20vh;
+  height: 25vh;
   padding: 2rem;
   background-color: #222;
   color: whitesmoke;
@@ -92,4 +92,12 @@ span {
   margin: 0;
   padding: 0;
 
+}
+
+.link__text {
+  font-weight: 200;
+}
+
+.link__link {
+  color: green;
 }
