@@ -3,7 +3,7 @@
 //TODO creamos un contexto para las tareas por si las necesitamos desde distintos componentes de nuestras app.
 
 import { createContext, useContext, useState } from "react";
-import { createTaskRequest, getTasksRequest, deleteTaskRequest } from "../api/tasks";
+import { createTaskRequest, updateTaskRequest, getTasksRequest, deleteTaskRequest, getTaskRequest } from "../api/tasks";
 
 const TaskContext = createContext();
 
@@ -41,8 +41,26 @@ export const TaskProvider = ({ children }) => {
         }
     }
 
+    const getTask = async (id) => {
+       try {
+        const res = await getTaskRequest(id)
+        //console.log(res)
+        return res.data
+        } catch (error) {
+        console.log(error);
+       }
+    }
+
+    const updateTask = async (id, newTask) => {
+        try {
+            await updateTaskRequest(id, newTask)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
   return (
-    <TaskContext.Provider value={{ tasks, createTask, getTasks, deleteTask }}>
+    <TaskContext.Provider value={{ tasks, createTask, updateTask, getTasks, deleteTask, getTask }}>
       {children}
     </TaskContext.Provider>
   );

@@ -1,43 +1,63 @@
 import Tasks from "../models/task.model.js"
 
 export const getTasks = async (req, res) => {
-    const tasks = await Tasks.find({
-        user: req.user.id //me trae todas las tareas de un usuario autenticado
-    }).populate('user')
-    res.json(tasks)
+   try {
+        const tasks = await Tasks.find({
+            user: req.user.id //me trae todas las tareas de un usuario autenticado
+        }).populate('user')
+        res.json(tasks)
+   } catch (error) {
+        return res.status(500).json({ message: "Something went wrong." })
+   }
 }
 
 export const createTask = async (req, res) => {
-    const { title, description, date } = req.body
-    //console.log(req.user)
-    const Task = new Tasks({
-        title,
-        description,
-        date,
-        user: req.user.id //se obtiene desde authRequired
-    })
-    const savedTask = await Task.save()
-    res.json(savedTask)
+    try {
+        const { title, description, date } = req.body
+        //console.log(req.user)
+        const Task = new Tasks({
+            title,
+            description,
+            date,
+            user: req.user.id //se obtiene desde authRequired
+        })
+        const savedTask = await Task.save()
+        res.json(savedTask)
+    } catch (error) {
+        return res.status(500).json({ message: "Something went wrong." })
+    }
+    
 }
 
 export const getTask = async (req, res) => {
-    const task = await Tasks.findById(req.params.id).populate('user')
-    if(!task) return res.status(404).json({ message: "Task not found." })
-    res.json(task)
+    try {
+        const task = await Tasks.findById(req.params.id).populate('user')
+        if(!task) return res.status(404).json({ message: "Task not found." })
+        res.json(task)   
+    } catch (error) {
+        return res.status(404).json({ message: "Task not found."})
+    }
 }
 
 export const deleteTask = async (req, res) => {
-    console.log('HELLO OLLIE');
-    const task = await Tasks.findByIdAndDelete(req.params.id)
-    if(!task) return res.status(404).json({ message: "Task not found." })
-    return res.sendStatus(204) //salio todo bien, pero no hay nada p/ mostrar.
+    try {
+        const task = await Tasks.findByIdAndDelete(req.params.id)
+        if(!task) return res.status(404).json({ message: "Task not found." })
+        return res.sendStatus(204) //salio todo bien, pero no hay nada p/ mostrar.   
+    } catch (error) {
+        return res.status(404).json({ message: "Task not found."})
+    }
 }
 
 export const updateTask = async (req, res) => {
-    const task = await Tasks.findByIdAndUpdate(req.params.id, req.body, 
+   try {
+        const task = await Tasks.findByIdAndUpdate(req.params.id, req.body, 
         { new: true })
-    if(!task) return res.status(404).json({ message: "Task not found." })
-    res.json(task)
+        if(!task) return res.status(404).json({ message: "Task not found." })
+        res.json(task)
+   } catch (error) {
+    return res.status(404).json({ message: "Task not found."})
+   }
 }
 
 //! mongoose por defecto cuando actualiza te devuelve el dato anterior.

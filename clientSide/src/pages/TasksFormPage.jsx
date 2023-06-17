@@ -1,18 +1,38 @@
 /* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
 import { useTasks } from "../context/TasksContext";
-import { useNavigate } from "react-router-dom";
-
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const TasksFormPage = () => {
-  const { register, handleSubmit } = useForm();
-  const { tasks, createTask } = useTasks()
+  const { register, handleSubmit, setValue } = useForm();
+  const { tasks, createTask, getTask, updateTask } = useTasks()
   const navigate = useNavigate()
+  const params = useParams()
 
+  //* Leemos los parametros pasados por URL a la carga para saber si crear o actualizar
+  useEffect(() => {
+    async function loadTask() {
+        //console.log(params)
+        //* Si existe peticionamos al backend p/ traer datos de esa tarea.
+        if(params.id){
+        const task = await getTask(params.id)
+        setValue('title', task.title)
+        setValue('description', task.description) //Establecemos nuevos valores para los elem del from
+      }
+    }
+    loadTask()
+  }, [])
+  
+
+//TODO: Si hay un parametro esta Editando sino esta Creando
   const onSubmit = handleSubmit((data) => {
-    //console.log(tasks)
-    createTask(data) //enviamos los datos para el backend
+    if(params.id){
+      updateTask(params.id, data)
+    }else {
+      //console.log(tasks)
+      createTask(data) //enviamos los datos para el backend
+    }
     navigate('/tasks')
   });
   return (
@@ -23,7 +43,7 @@ const TasksFormPage = () => {
         <textarea
           rows="3"
           placeholder="Description"
-          {...register("description")}
+          {...register("description")} // ...register -> onChange/value/name (3 props devuelve)
         ></textarea>
         <button className="addTask__submit">Save</button>
       </form>
