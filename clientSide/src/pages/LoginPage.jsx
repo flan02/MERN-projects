@@ -17,7 +17,7 @@ const LoginPage = () => {
   } = useForm();
   
   const { signin, error: signinErrors } = useAuth();
-  console.log('El error es',signinErrors);
+  //console.log('El error es',signinErrors);
   //const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {

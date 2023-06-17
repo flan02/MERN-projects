@@ -1,7 +1,9 @@
 import Users from '../models/user.model.js' 
 import bcrypt from 'bcryptjs'
-
+import jwt from 'jsonwebtoken'
+import {} from 'dotenv/config'
 import { createAccessToken } from '../helpers/jwt.js'
+
 //* https://jwt.io/   Validamos los tokens generados
 
 export const register = async (req, res) => {
@@ -43,8 +45,15 @@ export const login = async (req, res) => {
         if(!isMatch) return res.status(400).json({message: "Incorrect credentials."})
     //? Token p/ validar la sesion
         const token = await createAccessToken({ id: userFound._id })
+/*
+    res.cookie("token", token, {
+        sameSite: 'none', //la cookie no esta en el mismo dominio puerto 3000 != 5173
+        secure: true,
+        httpOnly: true
+    })
+   */
+  res.cookie("token", token)
 
-    res.cookie("token", token)
     //? datos para el frontend
     res.json({
         id: userFound._id,
@@ -79,3 +88,22 @@ export const profile = async (req, res) => {
         updateAt: userFound.updatedAt
     })
 } 
+
+export const verifyToken = async (req, res) => {
+    //Esta peticion se hace c/vez qe se recarga la pagina por 1era vez. 
+    const { token } = req.cookies
+    console.log(token)
+    if(!token) return res.status(401).json({ message: 'Unauthorized' })
+    const TOKEN_SECRET = process.env.TOKEN_SECRET // secret con el qe creamos el token
+    jwt.verify(token, TOKEN_SECRET, async (err, userDecoded) => {
+        if(err) return res.status(401).json({ message: 'Unauthorized' })
+        const userFound = await Users.findById(userDecoded.id) //! CONSULTA BASE DATOS
+        if(!userFound) return res.status(401).json({ message: 'Unauthorized' })
+        return res.json({
+            id: userFound._id,
+            username: userFound.username,
+            email: userFound.email
+        })
+    })
+
+}
