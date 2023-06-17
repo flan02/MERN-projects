@@ -101,3 +101,61 @@ span {
 .link__link {
   color: green;
 }
+
+/************************ Form addTask **************************/
+
+.form-addTask {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: auto auto;
+  padding: 1rem 0;
+  background: linear-gradient(black, blue);
+  border: 1px solid blue;
+}
+
+.form-addTask > * {
+  width: 90%;
+  margin: .3rem .3rem;
+}
+
+.addTask__title {
+  width: 30%;
+  align-self: flex-start;
+}
+
+.addTask__submit {
+  width: max-content;
+  align-self: center;
+  padding: 0.3rem 0.5rem;
+  background-color: aliceblue;
+  color:black;
+  border: 1px solid blue;
+  letter-spacing: 1px;
+}
+
+.addTask__submit:hover {
+  padding: 0.3rem 0.9rem;
+  background-color: rgb(55, 55, 158);
+  color: white;
+  border: 1px solid white;
+  letter-spacing: 1px;
+}
+
+/* ********************* List all tasks *************************** */
+
+.task__cont {
+  width: 100%;
+  min-height: 89vh;
+  padding: .3rem 0;
+  background-color: #333;
+}
+
+.task__item {
+  width: 80%;
+  margin: .3rem auto;
+  color:whitesmoke;
+  font-weight: 700;
+  border-bottom: thin solid springgreen;
+  border-right: thin solid springgreen;
+}

@@ -16,13 +16,18 @@ const LoginPage = () => {
     formState: { errors }
   } = useForm();
   
-  const { signin, error: signinErrors } = useAuth();
+  const { signin, error: signinErrors, isAuthenticated } = useAuth();
   //console.log('El error es',signinErrors);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onSubmit = handleSubmit(async (data) => {
     signin(data);
   });
+
+  useEffect(() => {
+    if(isAuthenticated) navigate("/tasks")
+  }, [isAuthenticated])
+  
 
   return (
     <>
