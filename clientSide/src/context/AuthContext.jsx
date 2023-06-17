@@ -45,6 +45,12 @@ export const AuthProvider = ({ children }) => {
         return setError([error.response.data]) //el objeto lo convertimos a arreglo.
       }
     }
+  };
+
+  const logout = () => {
+    Cookies.remove('token')
+    setIsAuthenticated(false)
+    setUser(null)
   }
 
   useEffect(() => {
@@ -94,7 +100,7 @@ export const AuthProvider = ({ children }) => {
   
 
   return (
-    <AuthContext.Provider value={{ loading, signup, signin, user, isAuthenticated, error }}>
+    <AuthContext.Provider value={{ logout, loading, signup, signin, user, isAuthenticated, error }}>
       {children}
     </AuthContext.Provider>
   );

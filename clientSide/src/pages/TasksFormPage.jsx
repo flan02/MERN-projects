@@ -1,13 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
 import { useTasks } from "../context/TasksContext";
+import { useNavigate } from "react-router-dom";
+
+
 
 const TasksFormPage = () => {
   const { register, handleSubmit } = useForm();
   const { tasks, createTask } = useTasks()
+  const navigate = useNavigate()
+
   const onSubmit = handleSubmit((data) => {
     //console.log(tasks)
     createTask(data) //enviamos los datos para el backend
+    navigate('/tasks')
   });
   return (
     <div>

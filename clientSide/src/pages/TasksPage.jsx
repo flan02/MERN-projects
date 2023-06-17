@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useEffect } from "react"
 import { useTasks } from "../context/TasksContext"
+import TaskCard from "../components/TaskCard"
+
 
 const TasksPage = () => {
     const { getTasks, tasks } = useTasks()
@@ -16,10 +18,7 @@ const TasksPage = () => {
       <div className="task__cont">
       {
         tasks.map((task, index) => (
-          <div key={index} className="task__item" >
-            <h2  >{task.title}</h2>
-            <p>{task.description}</p>
-          </div>
+         <TaskCard task={task} key={index} />
         ))
       }
       </div>

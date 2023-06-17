@@ -3,7 +3,7 @@
 //TODO creamos un contexto para las tareas por si las necesitamos desde distintos componentes de nuestras app.
 
 import { createContext, useContext, useState } from "react";
-import { createTaskRequest, getTasksRequest } from "../api/tasks";
+import { createTaskRequest, getTasksRequest, deleteTaskRequest } from "../api/tasks";
 
 const TaskContext = createContext();
 
@@ -31,8 +31,18 @@ export const TaskProvider = ({ children }) => {
     }
 };
 
+    const deleteTask = async (id) => {
+        try {
+            const res = await deleteTaskRequest(id)
+            //* Hacer un arreglo nuevo filtrando la qe acabamos de eliminar
+            if(res.status === 204) setTasks(tasks.filter((task) => task._id !== id))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
   return (
-    <TaskContext.Provider value={{ tasks, createTask, getTasks }}>
+    <TaskContext.Provider value={{ tasks, createTask, getTasks, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );
