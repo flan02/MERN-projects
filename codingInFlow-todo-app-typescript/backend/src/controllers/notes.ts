@@ -1,0 +1,36 @@
+import { RequestHandler } from "express";
+import noteModel from "../models/note";
+
+export const getNotes: RequestHandler = async (_req, res, next) => {
+    try {
+        const notes = await noteModel.find().exec();
+        res.status(200).json(notes)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getNote: RequestHandler = async (req, res, next) => {
+    const noteId = req.params.noteId
+
+    try {
+        const note = await noteModel.findById(noteId).exec()
+        res.status(200).json(note)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const createNote: RequestHandler = async (req, res, next) => {
+    const title = req.body.title
+    const text = req.body.text
+    try {
+        const newNote = await noteModel.create({
+            title: title,
+            text: text
+        })
+        res.status(201).json(newNote) //recurso creado!
+    } catch (error) {
+        next(error)
+    }
+}
