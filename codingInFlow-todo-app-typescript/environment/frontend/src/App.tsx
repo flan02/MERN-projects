@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Note as noteModel } from './models/note'
+import { Col, Container, Row } from 'react-bootstrap'
 import Note from './components/Note'
-
+import styles from './styles/NotesPage.module.css'
 
 function App() {
   const [notes, setNotes] = useState<noteModel[]>([])
@@ -27,14 +28,18 @@ function App() {
     getNotes()
   }, []) //! Si no pasamos un array vacio se ejecutara en c/ render y es un comportamiento qe no deseamos.
 
-
   return (
-    <div>
-      {notes.map((note) => (
-        <Note note={note} key={note._id} />
-      )
-      )}
-    </div>
+    <Container>
+      <Row xs={1} md={2} xl={3} className='g-4'>
+        {notes.map((note) => (
+          <Col key={note._id} >
+            <Note note={note} className={styles.note} />
+          </Col>
+        )
+        )}
+      </Row>
+
+    </Container>
   )
 }
 
