@@ -1,20 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import { Note } from './models/note'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [notes, setNotes] = useState<Note[]>([])
+
+  useEffect(() => {
+    async function getNotes() {
+      try {
+        const opts = {
+          method: "GET", headers: {
+            accept: 'application/json',
+            'User-agent': 'learning app',
+          }
+        }
+        //! en el package.json agregre "proxy": "http://localhost:5000" por errores de CORS.
+        const response = await fetch("http://localhost:5000/api/notes", opts)
+        const notes = await response.json()
+        setNotes(notes)
+      } catch (error) {
+        console.error("The error es:", error)
+        // alert(error)
+      }
+    }
+    getNotes()
+  }, []) //! Si no pasamos un array vacio se ejecutara en c/ render y es un comportamiento qe no deseamos.
+
 
   return (
-    <>
-
-      <p>
-        Subscribe to Coding in Flow.
-      </p>
-
-
-    </>
+    <div className='App'>
+      {JSON.stringify(notes)}
+    </div>
   )
 }
 

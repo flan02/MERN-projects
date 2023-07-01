@@ -1,13 +1,21 @@
 import "dotenv/config"
 import express, { NextFunction, Request, Response } from "express";
+import cors from 'cors'
+import bodyParser from "body-parser"
 import notesRoutes from "./routes/notes"
 import morgan from "morgan"
 import createHttpError, { isHttpError } from "http-errors";
 
-const app = express()
+const opts: cors.CorsOptions = {
+    methods: "GET,OPTIONS,PUT,POST,DELETE,PATCH",
+    origin: "http://localhost:5173"
+}
 
+const app = express()
 app.use(morgan("dev"))
 app.use(express.json())
+app.use(bodyParser.json());
+app.use(cors(opts))
 app.use("/api/notes", notesRoutes)
 app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"))
