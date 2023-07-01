@@ -1,24 +1,20 @@
 import { useState, useEffect } from 'react'
 import { Note as noteModel } from './models/note'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row } from 'react-bootstrap'
 import Note from './components/Note'
 import styles from './styles/NotesPage.module.css'
+import stylesUtils from './styles/utils.module.css'
+import * as NotesApi from "./network/notes_api"
+import AddNote from './components/AddNote'
 
 function App() {
   const [notes, setNotes] = useState<noteModel[]>([])
+  const [showAddNote, setShowAddNote] = useState(false)
 
   useEffect(() => {
     async function getNotes() {
       try {
-        const opts = {
-          method: "GET", headers: {
-            accept: 'application/json',
-            'User-agent': 'learning app',
-          }
-        }
-        //! en el package.json agregre "proxy": "http://localhost:5000" por errores de CORS.
-        const response = await fetch("http://localhost:5000/api/notes", opts)
-        const notes = await response.json()
+        const notes = await NotesApi.fetchNotes()
         setNotes(notes)
       } catch (error) {
         console.error("The error es:", error)
@@ -30,6 +26,9 @@ function App() {
 
   return (
     <Container>
+      <Button className={`mb-4 ${stylesUtils.blockCenter}`} onClick={() => setShowAddNote(true)}>
+        Add new note
+      </Button>
       <Row xs={1} md={2} xl={3} className='g-4'>
         {notes.map((note) => (
           <Col key={note._id} >
@@ -38,7 +37,10 @@ function App() {
         )
         )}
       </Row>
-
+      {showAddNote && <AddNote onDismiss={() => setShowAddNote(false)} onNoteSaved={(newNote) => {
+        setNotes([...notes, newNote])
+        setShowAddNote(false)
+      }} />}
     </Container>
   )
 }
