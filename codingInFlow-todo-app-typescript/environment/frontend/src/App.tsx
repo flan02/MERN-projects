@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Note as noteModel } from './models/note'
-import { Button, Col, Container, Row } from 'react-bootstrap'
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap'
 import Note from './components/Note'
 import styles from './styles/NotesPage.module.css'
 import stylesUtils from './styles/utils.module.css'
@@ -11,17 +11,22 @@ import { FaPlus } from "react-icons/fa"
 
 function App() {
   const [notes, setNotes] = useState<noteModel[]>([])
+  const [notesLoading, setNotesLoading] = useState(true)
+  const [showNotesLoadingError, setShowNotesLoadingError] = useState(false)
   const [showAddNote, setShowAddNote] = useState(false)
   const [noteToEdit, setNoteToEdit] = useState<noteModel | null>(null)
 
   useEffect(() => {
     async function getNotes() {
       try {
+        setShowNotesLoadingError(false)
+        setNotesLoading(true)
         const notes = await NotesApi.fetchNotes()
         setNotes(notes)
       } catch (error) {
-        console.error("The error es:", error)
-        // alert(error)
+        setShowNotesLoadingError(true)
+      } finally {
+        setNotesLoading(false)
       }
     }
     getNotes()
@@ -37,21 +42,30 @@ function App() {
     }
   }
 
+  const notesGrid =
+    <Row xs={1} md={2} xl={3} className={`g-4 ${styles.noteGrid} `}>
+      {notes.map((note) => (
+        <Col key={note._id} >
+          <Note note={note} onNote={setNoteToEdit} onDelete={deleteNote} className={styles.note} />
+        </Col>
+      ))}
+    </Row>
 
   return (
-    <Container>
+    <Container className={styles.notesPage}>
       <Button className={`mb-4 ${stylesUtils.blockCenter} ${stylesUtils.flexCenter}`} onClick={() => setShowAddNote(true)}>
         <FaPlus />
         Add new note
       </Button>
-      <Row xs={1} md={2} xl={3} className='g-4'>
-        {notes.map((note) => (
-          <Col key={note._id} >
-            <Note note={note} onNote={setNoteToEdit} onDelete={deleteNote} className={styles.note} />
-          </Col>
-        )
-        )}
-      </Row>
+      {notesLoading && <Spinner animation="border" variant="primary" />}
+      {showNotesLoadingError && <p>Something went wrong. Please refresh the page</p>}
+      {!notesLoading && !showNotesLoadingError &&
+        <>
+          {
+            notes.length > 0 ? notesGrid : <p className={stylesUtils.blockCenter}>No notes found</p> //? Si es true, se ejecuta notesGrid, si es false, se ejecuta el parrafo  
+          }
+        </>
+      }
       {showAddNote && <AddEditNote onDismiss={() => setShowAddNote(false)} onNoteSaved={(newNote) => {
         setNotes([...notes, newNote])
         setShowAddNote(false)
