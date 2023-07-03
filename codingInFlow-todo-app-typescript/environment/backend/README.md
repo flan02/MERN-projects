@@ -14,3 +14,8 @@ Sino tenemos un script en package.json de todas formas podemos correr nuestro li
 
 ## Link para copiar un archivo .gitignore prolijo
 ** https://github.com/github/gitignore/blob/main/Node.gitignore **
+
+## Dependencia "express-session" (es como JWT per mas facil)
+** $ npm install express-session** y ** $ npm install @types/express-session **
+*Instalar la session de Redis-based store pq es muy rapida y nosotros estamos conectados a mdbAtlas en la nube.* (Es mas dificil de configurar que la session p/ mongodb).
+** $ npm install connect-mongo **

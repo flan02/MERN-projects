@@ -3,8 +3,12 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from 'cors'
 import bodyParser from "body-parser"
 import notesRoutes from "./routes/notes"
+import userRouter from "./routes/users"
 import morgan from "morgan"
 import createHttpError, { isHttpError } from "http-errors";
+import session from "express-session"
+import env from "./util/validateEnv"
+import MongoStore from "connect-mongo";
 
 const opts: cors.CorsOptions = {
     methods: "GET,OPTIONS,PUT,POST,DELETE,PATCH",
@@ -16,13 +20,28 @@ app.use(morgan("dev"))
 app.use(express.json())
 app.use(bodyParser.json());
 app.use(cors(opts))
+app.use(session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60
+    },
+    rolling: true,
+    store: MongoStore.create({
+        mongoUrl: env.MONGO_CONNECTION_STRING
+    })
+    //store: new session.MemoryStore() //*Guarda en memoria NO sirve p/ produccion
+}))
+
+app.use("/api/users", userRouter)
 app.use("/api/notes", notesRoutes)
-app.use((req, res, next) => {
+app.use((_req, _res, next) => {
     next(createHttpError(404, "Endpoint not found"))
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => {
     console.error(error)
     let errMessage = "An unknown error occurred"
     let statusCode = 500
