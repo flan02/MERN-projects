@@ -9,3 +9,12 @@
     justify-content: center;
     gap: 4px;
 }
+
+.width100 {
+    width: 100%;
+    border-radius: 3rem;
+}
+
+.width100:hover {
+  background-color: blue;
+}
