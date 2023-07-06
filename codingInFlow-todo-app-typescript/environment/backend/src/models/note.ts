@@ -1,5 +1,9 @@
 import { InferSchemaType, Schema, model } from "mongoose"
 const noteSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -7,10 +11,7 @@ const noteSchema = new Schema({
     text: {
         type: String
     },
-},
-    {
-        timestamps: true
-    })
+}, { timestamps: true })
 
 //? Creamos un tipo con el schema de mongodb
 type Note = InferSchemaType<typeof noteSchema>

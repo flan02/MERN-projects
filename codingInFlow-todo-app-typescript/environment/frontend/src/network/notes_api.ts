@@ -1,3 +1,4 @@
+import { ConflictError, UnauthorizedError } from "../errors/http_errors"
 import { Note } from "../models/note"
 import { User } from "../models/user"
 
@@ -7,17 +8,21 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
     if (!response.ok) {
         const errorBody = await response.json()
         const errorMessage = errorBody.error()
-        throw Error(errorMessage)
+        //throw Error(errorMessage)
+        if (response.status === 401) {
+            throw new UnauthorizedError(errorMessage);
+        } else if (response.status === 409) {
+            throw new ConflictError(errorMessage);
+        } else {
+            throw Error("Request failed with status: " + response.status + " message: " + errorMessage);
+        }
     }
     return response
 }
 
 export async function fetchNotes(): Promise<Note[]> {
     const opts = {
-        method: "GET", headers: {
-            accept: 'application/json',
-            'User-agent': 'learning app',
-        }
+        method: "GET"
     }
     //! en el package.json agregre "proxy": "http://localhost:5000" por errores de CORS.
     const response = await fetchData("http://localhost:5000/api/notes", opts)

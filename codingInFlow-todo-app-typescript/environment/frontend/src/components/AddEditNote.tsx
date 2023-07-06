@@ -26,7 +26,7 @@ const AddEditNote = ({ noteToEdit, onDismiss, onNoteSaved }: AddEditNoteProps) =
             else noteResponse = await NotesApi.createNote(input)
             onNoteSaved(noteResponse)
         } catch (error) {
-            console.error(error)
+            //console.error(error)
             alert(error)
         }
     }
@@ -45,7 +45,7 @@ const AddEditNote = ({ noteToEdit, onDismiss, onNoteSaved }: AddEditNoteProps) =
                         <Form.Control.Feedback type="invalid">{errors.title?.message}</Form.Control.Feedback>
                     </Form.Group>
                     */}
-                    <TextInputField as="textarea" rows={5} name="text" label="Text" register={register} error={errors.text} placeholder="Text" />
+                    <TextInputField as="textarea" rows={5} name="text" label="Text" register={register} placeholder="Text" />
                     {/*
                     <Form.Group className="mb-3">
                         <Form.Label>Text</Form.Label>
